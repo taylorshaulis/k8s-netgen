@@ -1,9 +1,5 @@
-FROM amd64/golang:latest AS gofish
-WORKDIR /
-ADD echo-server/echo-server.go /echo-server.go
-RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" echo-server.go
-RUN chmod +x echo-server.go
-
-FROM amd64/alpine:latest
-COPY --from=gofish /echo-server.go /echo-server.go
-ENTRYPOINT ["/echo-server.go"]
+FROM golang:1.14.11-alpine3.11
+WORKDIR /go/src/app
+ADD echo-server/echo-server.go .
+RUN go build echo-server.go
+CMD ["app"]
